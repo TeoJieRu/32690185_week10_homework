@@ -10,7 +10,7 @@
     {"name": "continent1_store"},
     {
       "name": "source_0",
-      "url": "https://raw.githubusercontent.com/TeoJieRu/32690185_FIT3179_week10_homework/main/forest/use1.csv",
+      "url": "https://raw.githubusercontent.com/TeoJieRu/32690185_week10_homework/main/forest/use1.csv",
       "format": {"type": "csv", "delimiter": ","},
       "transform": [
         {
