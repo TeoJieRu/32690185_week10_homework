@@ -1,0 +1,257 @@
+{
+  "$schema": "https://vega.github.io/schema/vega/v5.json",
+  "background": "white",
+  "padding": 5,
+  "width": 800,
+  "height": 400,
+  "title": {"text": "Continent Forest Area 2020", "frame": "group"},
+  "style": "cell",
+  "data": [
+    {"name": "continent1_store"},
+    {
+      "name": "source_0",
+      "url": "https://raw.githubusercontent.com/TeoJieRu/32690185_FIT3179_week10_homework/main/forest/use1.csv",
+      "format": {"type": "csv", "delimiter": ","},
+      "transform": [
+        {
+          "type": "aggregate",
+          "groupby": ["Continent"],
+          "ops": ["sum"],
+          "fields": ["Area_2020"],
+          "as": ["sum_Area_2020"]
+        },
+        {
+          "type": "filter",
+          "expr": "isValid(datum[\"sum_Area_2020\"]) && isFinite(+datum[\"sum_Area_2020\"])"
+        }
+      ]
+    }
+  ],
+  "signals": [
+    {
+      "name": "unit",
+      "value": {},
+      "on": [
+        {"events": "mousemove", "update": "isTuple(group()) ? group() : unit"}
+      ]
+    },
+    {
+      "name": "continent1_Continent_legend",
+      "value": null,
+      "on": [
+        {
+          "events": [
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "Continent_legend_symbols"
+            },
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "Continent_legend_labels"
+            },
+            {
+              "source": "view",
+              "type": "click",
+              "markname": "Continent_legend_entries"
+            }
+          ],
+          "update": "datum.value || item().items[0].items[0].datum.value",
+          "force": true
+        },
+        {
+          "events": [{"source": "view", "type": "click"}],
+          "update": "!event.item || !datum ? null : continent1_Continent_legend",
+          "force": true
+        }
+      ]
+    },
+    {
+      "name": "continent1",
+      "update": "vlSelectionResolve(\"continent1_store\", \"union\", true, true)"
+    },
+    {
+      "name": "continent1_tuple",
+      "update": "continent1_Continent_legend !== null ? {fields: continent1_tuple_fields, values: [continent1_Continent_legend]} : null"
+    },
+    {
+      "name": "continent1_tuple_fields",
+      "value": [{"type": "E", "field": "Continent"}]
+    },
+    {
+      "name": "continent1_toggle",
+      "value": false,
+      "on": [
+        {
+          "events": {"merge": [{"source": "view", "type": "click"}]},
+          "update": "event.shiftKey"
+        }
+      ]
+    },
+    {
+      "name": "continent1_modify",
+      "on": [
+        {
+          "events": {"signal": "continent1_tuple"},
+          "update": "modify(\"continent1_store\", continent1_toggle ? null : continent1_tuple, continent1_toggle ? null : true, continent1_toggle ? continent1_tuple : null)"
+        }
+      ]
+    }
+  ],
+  "marks": [
+    {
+      "name": "layer_0_marks",
+      "type": "rect",
+      "style": ["bar"],
+      "interactive": true,
+      "from": {"data": "source_0"},
+      "encode": {
+        "update": {
+          "fill": {"scale": "color", "field": "Continent"},
+          "opacity": [
+            {
+              "test": "!length(data(\"continent1_store\")) || vlSelectionTest(\"continent1_store\", datum)",
+              "value": 1
+            },
+            {"value": 0.2}
+          ],
+          "tooltip": {
+            "signal": "{\"Continent\": isValid(datum[\"Continent\"]) ? datum[\"Continent\"] : \"\"+datum[\"Continent\"], \"Forest Area 2020(km2)\": format(datum[\"sum_Area_2020\"], \"\")}"
+          },
+          "ariaRoleDescription": {"value": "bar"},
+          "description": {
+            "signal": "\"Continent: \" + (isValid(datum[\"Continent\"]) ? datum[\"Continent\"] : \"\"+datum[\"Continent\"]) + \"; Sum of Area_2020: \" + (format(datum[\"sum_Area_2020\"], \"\")) + \"; Forest Area 2020(km2): \" + (format(datum[\"sum_Area_2020\"], \"\"))"
+          },
+          "x": {"scale": "x", "field": "Continent"},
+          "width": {"scale": "x", "band": 1},
+          "y": {"scale": "y", "field": "sum_Area_2020"},
+          "y2": {"scale": "y", "value": 0}
+        }
+      }
+    },
+    {
+      "name": "layer_1_marks",
+      "type": "text",
+      "style": ["text"],
+      "interactive": true,
+      "from": {"data": "source_0"},
+      "encode": {
+        "update": {
+          "align": {"value": "center"},
+          "baseline": {"value": "alphabetic"},
+          "fontSize": {"value": 11.5},
+          "fill": {"value": "black"},
+          "tooltip": {
+            "signal": "{\"Continent\": isValid(datum[\"Continent\"]) ? datum[\"Continent\"] : \"\"+datum[\"Continent\"], \"Forest Area 2020(km2)\": format(datum[\"sum_Area_2020\"], \"\")}"
+          },
+          "description": {
+            "signal": "\"Continent: \" + (isValid(datum[\"Continent\"]) ? datum[\"Continent\"] : \"\"+datum[\"Continent\"]) + \"; Sum of Area_2020: \" + (format(datum[\"sum_Area_2020\"], \"\")) + \"; Forest Area 2020(km2): \" + (format(datum[\"sum_Area_2020\"], \"\"))"
+          },
+          "x": {"scale": "x", "field": "Continent", "band": 0.5},
+          "y": {"scale": "y", "field": "sum_Area_2020"},
+          "text": {"signal": "format(datum[\"sum_Area_2020\"], \"\")"}
+        }
+      }
+    }
+  ],
+  "scales": [
+    {
+      "name": "x",
+      "type": "band",
+      "domain": {"data": "source_0", "field": "Continent", "sort": true},
+      "range": [0, {"signal": "width"}],
+      "paddingInner": 0.1,
+      "paddingOuter": 0.05
+    },
+    {
+      "name": "y",
+      "type": "linear",
+      "domain": {"data": "source_0", "field": "sum_Area_2020"},
+      "range": [{"signal": "height"}, 0],
+      "nice": true,
+      "zero": true
+    },
+    {
+      "name": "color",
+      "type": "ordinal",
+      "domain": {"data": "source_0", "field": "Continent", "sort": true},
+      "range": "category"
+    }
+  ],
+  "axes": [
+    {
+      "scale": "y",
+      "orient": "left",
+      "gridScale": "x",
+      "grid": true,
+      "tickCount": {"signal": "ceil(height/40)"},
+      "domain": false,
+      "labels": false,
+      "aria": false,
+      "maxExtent": 0,
+      "minExtent": 0,
+      "ticks": false,
+      "zindex": 0
+    },
+    {
+      "scale": "x",
+      "orient": "bottom",
+      "grid": false,
+      "title": "Continent",
+      "labelAngle": 0,
+      "labelBaseline": "top",
+      "zindex": 0
+    },
+    {
+      "scale": "y",
+      "orient": "left",
+      "grid": false,
+      "title": "Forest Area 2020",
+      "labelOverlap": true,
+      "tickCount": {"signal": "ceil(height/40)"},
+      "zindex": 0
+    }
+  ],
+  "legends": [
+    {
+      "fill": "color",
+      "symbolType": "square",
+      "title": "Continent",
+      "encode": {
+        "labels": {
+          "name": "Continent_legend_labels",
+          "interactive": true,
+          "update": {
+            "opacity": [
+              {
+                "test": "(!length(data(\"continent1_store\")) || (continent1[\"Continent\"] && indexof(continent1[\"Continent\"], datum.value) >= 0))",
+                "value": 1
+              },
+              {"value": 0.35}
+            ]
+          }
+        },
+        "symbols": {
+          "name": "Continent_legend_symbols",
+          "interactive": true,
+          "update": {
+            "opacity": [
+              {
+                "test": "(!length(data(\"continent1_store\")) || (continent1[\"Continent\"] && indexof(continent1[\"Continent\"], datum.value) >= 0))",
+                "value": 1
+              },
+              {"value": 0.35}
+            ]
+          }
+        },
+        "entries": {
+          "name": "Continent_legend_entries",
+          "interactive": true,
+          "update": {"fill": {"value": "transparent"}}
+        }
+      }
+    }
+  ],
+  "config": {}
+}
