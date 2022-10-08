@@ -8,22 +8,22 @@
   "data": [
     {
       "name": "source_0",
-      "url": "https://raw.githubusercontent.com/TeoJieRu/32690185_FIT3179_week10_homework/main/ne_110m_ocean.topojson",
+      "url": "https://raw.githubusercontent.com/TeoJieRu/32690185_week10_homework/main/ne_110m_ocean.topojson",
       "format": {"type": "topojson", "feature": "oceans"}
     },
     {
       "name": "source_1",
-      "url": "https://raw.githubusercontent.com/TeoJieRu/32690185_FIT3179_week10_homework/main/ne_110m.topojson",
+      "url": "https://raw.githubusercontent.com/TeoJieRu/32690185_week10_homework/main/ne_110m.topojson",
       "format": {"type": "topojson", "feature": "ne_110m_graticules_30"}
     },
     {
       "name": "source_3",
-      "url": "https://raw.githubusercontent.com/TeoJieRu/32690185_FIT3179_week10_homework/main/forest/Forest_Data.csv",
+      "url": "https://raw.githubusercontent.com/TeoJieRu/32690185_week10_homework/main/forest/Forest_Data.csv",
       "format": {"type": "csv", "delimiter": ","}
     },
     {
       "name": "source_2",
-      "url": "https://raw.githubusercontent.com/TeoJieRu/32690185_FIT3179_week10_homework/main/ne_110m.topojson",
+      "url": "https://raw.githubusercontent.com/TeoJieRu/32690185_week10_homework/main/ne_110m.topojson",
       "format": {
         "type": "topojson",
         "feature": "ne_110m_admin_0_countries",
